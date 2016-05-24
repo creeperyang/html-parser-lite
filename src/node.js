@@ -20,12 +20,17 @@ class Node {
         }
     }
     appendChild(node) {
-        node && this.childNodes.push(node)
+        if (node) {
+            // ensure correct parentNode
+            node.parentNode = this
+            this.childNodes.push(node)
+        }
     }
     insertAfter(node, targetNode) {
         if (!targetNode) return this.appendChild(node)
         this.childNodes.some((n, i) => {
             if (n === targetNode) {
+                node.parentNode = this
                 this.childNodes.splice(i, 0, node)
                 return true
             }
@@ -35,6 +40,7 @@ class Node {
         if (!targetNode) return this.appendChild(node)
         this.childNodes.some((n, i) => {
             if (n === targetNode) {
+                node.parentNode = this
                 i === 0 ? this.childNodes.unshift(node) : this.childNodes.splice(i - 1, 0, node)
                 return true
             }
