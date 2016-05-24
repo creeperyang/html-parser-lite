@@ -4,7 +4,7 @@
   "description": "A light weight html parser",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/.bin/mocha"
   },
   "repository": {
     "type": "git",
@@ -22,5 +22,9 @@
   "bugs": {
     "url": "https://github.com/creeperyang/html-parser-lite/issues"
   },
-  "homepage": "https://github.com/creeperyang/html-parser-lite#readme"
+  "homepage": "https://github.com/creeperyang/html-parser-lite#readme",
+  "devDependencies": {
+    "mocha": "^2.5.2",
+    "should": "^8.4.0"
+  }
 }
