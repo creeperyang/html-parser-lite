@@ -78,6 +78,9 @@ elementProcessor['!doctype'] = elementProcessor['doctype']
 
 class HtmlScanner {
     constructor() {
+        this.reset()
+    }
+    reset() {
         this.rootNode = new DocumentNode({
             tagName: 'document',
             nodeType: DOCUMENT_NODE
