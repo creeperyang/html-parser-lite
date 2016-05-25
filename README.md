@@ -2,7 +2,9 @@
 
 > A light weight html parser and more.
 
-### Usage
+### Installation & Usage
+
+[![NPM](https://nodei.co/npm/html-parser-lite.png?compact=true)](https://nodei.co/npm/html-parser-lite/)
 
 ```js
 const fs = require('fs')
