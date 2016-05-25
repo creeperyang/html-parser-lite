@@ -4,12 +4,14 @@ const HtmlScanner = require('./scanner')
 class HtmlParser extends Parser {
     constructor() {
         super()
-        this.contentHandler = new HtmlScanner()
+        this.scanner = new HtmlScanner()
     }
     parse(html) {
         super.parse(html)
-        return this.contentHandler.getRootNode()
+        return this.scanner.getRootNode()
     }
 }
 
-module.exports = HtmlParser
+exports = module.exports = HtmlParser
+exports.RawHtmlParser = Parser
+exports.HtmlScanner = HtmlScanner

@@ -32,7 +32,7 @@ class HtmlParser {
             if (html.substring(0, 4) === '<!--') {
                 index = html.indexOf('-->')
                 if (index !== -1) {
-                    this.contentHandler.comment(html.substring(4, index))
+                    this.scanner.comment(html.substring(4, index))
                     html = html.substring(index + 3);
                     treatAsChars = false
                 } else {
@@ -63,10 +63,10 @@ class HtmlParser {
             if (treatAsChars) {
                 index = html.indexOf('<')
                 if (index === -1) {
-                    this.contentHandler.characters(html)
+                    this.scanner.characters(html)
                     html = ''
                 } else {
-                    this.contentHandler.characters(html.substring(0, index))
+                    this.scanner.characters(html.substring(0, index))
                     html = html.substring(index)
                 }
             }
@@ -82,10 +82,10 @@ class HtmlParser {
             attrInput = attrInput.replace(/\s*\/\s*$/, '')
         }
         let attrs = this.parseAttributes(tagName, attrInput)
-        this.contentHandler.startElement(tagName, attrs, isSelfColse, match[0])
+        this.scanner.startElement(tagName, attrs, isSelfColse, match[0])
     }
     parseEndTag(input, tagName) {
-        this.contentHandler.endElement(tagName);
+        this.scanner.endElement(tagName);
     }
     parseAttributes(tagName, input) {
         let attrs = {}
@@ -102,7 +102,7 @@ class HtmlParser {
 HtmlParser.prototype.attrRe = attrRe
 HtmlParser.prototype.endTagRe = endTagRe
 HtmlParser.prototype.startTagRe = startTagRe
-HtmlParser.prototype.contentHandler = {
+HtmlParser.prototype.scanner = {
     startElement() {
         mustImplementMethod('startElement')
     },
