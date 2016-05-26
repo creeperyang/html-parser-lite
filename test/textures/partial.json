@@ -1,0 +1,64 @@
+{
+	"startElementQueue": [
+		{
+			"tagName": "body",
+			"attrs": {
+				"id": "partial"
+			},
+			"isSelfColse": false,
+			"input": "<body id='partial'>"
+		},
+		{
+			"tagName": "h1",
+			"attrs": {},
+			"isSelfColse": false,
+			"input": "<h1>"
+		},
+		{
+			"tagName": "div",
+			"attrs": {
+				"class": "nice test",
+				"style": "background-image:url(//cn.bing.com/s/a/hp_zh_cn.png)"
+			},
+			"isSelfColse": false,
+			"input": "<div class=\"nice test\" style=\"background-image:url(//cn.bing.com/s/a/hp_zh_cn.png)\">"
+		},
+		{
+			"tagName": "input",
+			"attrs": {
+				"type": "button",
+				"name": "name",
+				"value": "v"
+			},
+			"isSelfColse": false,
+			"input": "<input type=\"button\" name=\"name\" value=\"v\">"
+		},
+		{
+			"tagName": "img",
+			"attrs": {
+				"src": "http://cn.bing.com/s/a/hp_zh_cn.png",
+				"alt": true
+			},
+			"isSelfColse": true,
+			"input": "<img src=\"http://cn.bing.com/s/a/hp_zh_cn.png\" alt />"
+		}
+	],
+	"endElementQueue": [
+		"h1",
+		"div",
+		"body"
+	],
+	"textQueue": [
+		"\n",
+		"\n    ",
+		"great!",
+		"\n    ",
+		"\n        ",
+		"\n        ",
+		"\n    ",
+		"\n"
+	],
+	"commentQueue": [
+		" test RawHtmlParser "
+	]
+}
