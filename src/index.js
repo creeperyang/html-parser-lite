@@ -2,9 +2,12 @@ const Parser = require('./parser')
 const HtmlScanner = require('./scanner')
 
 class HtmlParser extends Parser {
-    constructor() {
-        super()
-        this.scanner = new HtmlScanner()
+    constructor(options) {
+        options = options || {}
+        if (!options.scanner) {
+            options.scanner = new HtmlScanner()
+        }
+        super(options)
     }
     parse(html) {
         super.parse(html)
