@@ -4,10 +4,10 @@ const should = require('should') // eslint-disable-line
 const HtmlParser = require('../src')
 const Node = require('../src/node')
 
-describe('API', function() {
+describe('HtmlParser', function() {
+    const parser = new HtmlParser()
     it('should parse html to nodes tree correctly', function() {
         const html = fs.readFileSync(path.resolve(__dirname, 'textures/simple.html'))
-        const parser = new HtmlParser()
         const tree = parser.parse(html.toString())
         tree.should.have.properties({
             tagName: 'document',
@@ -30,7 +30,6 @@ describe('API', function() {
     })
     it('should parse complex doctype correctly', function() {
         const html = fs.readFileSync(path.resolve(__dirname, 'textures/doctype.html'))
-        const parser = new HtmlParser()
         const tree = parser.parse(html.toString())
         tree.should.have.properties({
             tagName: 'document',
