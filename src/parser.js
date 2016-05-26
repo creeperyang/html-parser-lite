@@ -23,9 +23,17 @@ const mustImplementMethod = (name) => {
  * http://erik.eae.net/simplehtmlparser/simplehtmlparser.js
  */
 class HtmlParser {
+    constructor(options) {
+        options = options || {}
+        if (options.scanner) {
+            this.scanner = options.scanner
+            options.scanner = null
+        }
+        this.options = Object.assign({}, HtmlParser.defaults, options)
+    }
     parse(html) {
         let treatAsChars = false
-        let index, match
+        let index, match, characters
         while (html.length) {
             // comment
             if (html.substring(0, 4) === '<!--') {
@@ -64,11 +72,15 @@ class HtmlParser {
             if (treatAsChars) {
                 index = html.indexOf('<')
                 if (index === -1) {
-                    this.scanner.characters(html)
+                    characters = html
                     html = ''
                 } else {
-                    this.scanner.characters(html.substring(0, index))
+                    characters = html.substring(0, index)
                     html = html.substring(index)
+                }
+
+                if (!this.options.ignoreWhitespaceText || !/^\s*$/.test(characters)) {
+                    this.scanner.characters(characters)
                 }
             }
 
@@ -96,9 +108,10 @@ class HtmlParser {
         })
         return attrs
     }
-    parseAttribute(input) {
+}
 
-    }
+HtmlParser.defaults = {
+    ignoreWhitespaceText: false
 }
 
 HtmlParser.prototype.attrRe = attrRe
