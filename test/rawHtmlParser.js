@@ -34,28 +34,28 @@ describe('RawHtmlParser', function() {
         const endElementQueue = []
         const textQueue = []
         const commentQueue = []
-        const scanner = {
-            startElement(tagName, attrs, isSelfColse, input) {
-                tagName = tagName.toLowerCase()
-                startElementQueue.push({
-                    tagName,
-                    attrs,
-                    isSelfColse,
-                    input
-                })
-            },
-            endElement(tagName) {
-                endElementQueue.push(tagName)
-            },
-            characters(text) {
-                textQueue.push(text)
-            },
-            comment(text) {
-                commentQueue.push(text)
+        const parser = new HtmlParser({
+            scanner: {
+                startElement(tagName, attrs, isSelfColse, input) {
+                    tagName = tagName.toLowerCase()
+                    startElementQueue.push({
+                        tagName,
+                        attrs,
+                        isSelfColse,
+                        input
+                    })
+                },
+                endElement(tagName) {
+                    endElementQueue.push(tagName)
+                },
+                characters(text) {
+                    textQueue.push(text)
+                },
+                comment(text) {
+                    commentQueue.push(text)
+                }
             }
-        }
-        const parser = new HtmlParser()
-        parser.scanner = scanner
+        })
         parser.parse(html.toString())
         startElementQueue.should.deepEqual(expected.startElementQueue)
         endElementQueue.should.deepEqual(expected.endElementQueue)
