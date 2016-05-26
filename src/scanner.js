@@ -6,7 +6,7 @@ const {
     DOCUMENT_NODE,
     DOCUMENT_TYPE_NODE
 } = Node.NODE_TYPE
-const {DoctypeNode, DocumentNode} = Node
+const { DoctypeNode, DocumentNode } = Node
 
 /**
  * html5 self close tags <http://xahlee.info/js/html5_non-closing_tag.html>
@@ -37,9 +37,9 @@ const {DoctypeNode, DocumentNode} = Node
 const doctypeRe = /^\s*<!doctype\s+(html)(\s+public(\s+('[^']+'|"[^"]+"))?(\s+('[^']+'|"[^"]+"))?)?\s*/i
 const elementProcessor = {
     doctype(ctx, tagName, attrs, isSelfColse, input) {
-        let parentNode = ctx.path[ctx.path.length - 1]
-        let parts = doctypeRe.exec(input) || []
-        let node = new DoctypeNode({
+        const parentNode = ctx.path[ctx.path.length - 1]
+        const parts = doctypeRe.exec(input) || []
+        const node = new DoctypeNode({
             tagName: 'doctype',
             nodeType: DOCUMENT_TYPE_NODE,
             parentNode: parentNode,
@@ -50,8 +50,8 @@ const elementProcessor = {
         parentNode.appendChild(node)
     },
     _default(ctx, tagName, attrs, isSelfColse, input) {
-        let parentNode = ctx.path[ctx.path.length - 1]
-        let node = new Node({
+        const parentNode = ctx.path[ctx.path.length - 1]
+        const node = new Node({
             tagName,
             nodeType: ELEMENT_NODE,
             attrs,
@@ -103,8 +103,8 @@ class HtmlScanner {
     characters(text) {
         // drop empty text node
         if (/^\s*$/.test(text)) return
-        let currentNode = this.path[this.path.length - 1]
-        let node = new Node({
+        const currentNode = this.path[this.path.length - 1]
+        const node = new Node({
             tagName: 'text',
             nodeType: TEXT_NODE,
             textContent: text,
@@ -113,8 +113,8 @@ class HtmlScanner {
         currentNode.appendChild(node)
     }
     comment(text) {
-        let currentNode = this.path[this.path.length - 1]
-        let node = new Node({
+        const currentNode = this.path[this.path.length - 1]
+        const node = new Node({
             tagName: 'comment',
             nodeType: COMMENT_NODE,
             textContent: text,

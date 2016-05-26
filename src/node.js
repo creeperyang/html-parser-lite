@@ -6,7 +6,7 @@ const DOCUMENT_NODE = 9
 const DOCUMENT_TYPE_NODE = 10 // <!doctype html>
 
 class Node {
-    constructor({tagName, nodeType, attrs, textContent, parentNode, childNodes}) {
+    constructor({ tagName, nodeType, attrs, textContent, parentNode, childNodes }) {
         this.tagName = tagName
         this.nodeType = nodeType
         this.textContent = textContent
@@ -47,7 +47,7 @@ class Node {
         })
     }
     toJSON() {
-        let json = {
+        const json = {
             tagName: this.tagName,
             nodeType: this.nodeType
         }

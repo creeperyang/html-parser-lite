@@ -3,17 +3,17 @@
 // 2. and then \s*=\s*
 // 3. and value can be "value" | 'value' | value
 // 4. 2 and 3 are optional
-const attrRe = /([^=\s]+)(\s*=\s*((\"([^"]*)\")|(\'([^']*)\')|[^>\s]+))?/gm
+const attrRe = /([^=\s]+)(\s*=\s*(("([^"]*)")|('([^']*)')|[^>\s]+))?/gm
 const endTagRe = /^<\/([^>\s]+)[^>]*>/m
 // start tag, like <a href="link"> <img/>
 // 1. must start with <tagName
 // 2. optional attrbutes
 // 3. /> or >
-const startTagRe = /^<([^>\s\/]+)((\s+[^=>\s]+(\s*=\s*((\"[^"]*\")|(\'[^']*\')|[^>\s]+))?)*)\s*\/?\s*>/m
+const startTagRe = /^<([^>\s\/]+)((\s+[^=>\s]+(\s*=\s*(("[^"]*")|('[^']*')|[^>\s]+))?)*)\s*\/?\s*>/m
 const selfCloseTagRe = /\s*\/\s*>\s*$/m
 
 const mustImplementMethod = (name) => {
-    throw new Error(`Must implement the method ${name ? name : ''}`)
+    throw new Error(`Must implement the method ${name || ''}`)
 }
 
 /**
@@ -23,17 +23,16 @@ const mustImplementMethod = (name) => {
  * http://erik.eae.net/simplehtmlparser/simplehtmlparser.js
  */
 class HtmlParser {
-    constructor() {}
     parse(html) {
         let treatAsChars = false
-        let index, leftPart, rightPart, match
+        let index, match
         while (html.length) {
             // comment
             if (html.substring(0, 4) === '<!--') {
                 index = html.indexOf('-->')
                 if (index !== -1) {
                     this.scanner.comment(html.substring(4, index))
-                    html = html.substring(index + 3);
+                    html = html.substring(index + 3)
                     treatAsChars = false
                 } else {
                     treatAsChars = true
@@ -41,7 +40,8 @@ class HtmlParser {
             }
             // end tag
             else if (html.substring(0, 2) === '</') {
-                if (match = this.endTagRe.exec(html)) {
+                match = this.endTagRe.exec(html)
+                if (match) {
                     html = RegExp.rightContext
                     treatAsChars = false
                     this.parseEndTag(RegExp.lastMatch, match[1])
@@ -51,7 +51,8 @@ class HtmlParser {
             }
             // start tag
             else if (html.charAt(0) === '<') {
-                if (match = this.startTagRe.exec(html)) {
+                match = this.startTagRe.exec(html)
+                if (match) {
                     html = RegExp.rightContext
                     treatAsChars = false
                     this.parseStartTag(RegExp.lastMatch, match[1], match)
@@ -71,26 +72,27 @@ class HtmlParser {
                 }
             }
 
-            treatAsChars = true;
+            treatAsChars = true
+            match = null
         }
     }
 
     parseStartTag(input, tagName, match) {
-        let isSelfColse = selfCloseTagRe.test(input)
+        const isSelfColse = selfCloseTagRe.test(input)
         let attrInput = match[2]
         if (isSelfColse) {
             attrInput = attrInput.replace(/\s*\/\s*$/, '')
         }
-        let attrs = this.parseAttributes(tagName, attrInput)
+        const attrs = this.parseAttributes(tagName, attrInput)
         this.scanner.startElement(tagName, attrs, isSelfColse, match[0])
     }
     parseEndTag(input, tagName) {
-        this.scanner.endElement(tagName);
+        this.scanner.endElement(tagName)
     }
     parseAttributes(tagName, input) {
-        let attrs = {}
+        const attrs = {}
         input.replace(this.attrRe, (attr, name, c2, value, c4, valueInQuote, c6, valueInSingleQuote) => {
-            attrs[name] = valueInSingleQuote || valueInQuote || value || true;
+            attrs[name] = valueInSingleQuote || valueInQuote || value || true
         })
         return attrs
     }

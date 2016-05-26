@@ -8,7 +8,7 @@ class HtmlParser extends Parser {
     }
     parse(html) {
         super.parse(html)
-        let tree = this.scanner.getRootNode()
+        const tree = this.scanner.getRootNode()
         // always reset scanner after parse finish
         this.scanner.reset()
         return tree

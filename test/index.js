@@ -1,14 +1,14 @@
 const fs = require('fs')
 const path = require('path')
-const should = require('should')
+const should = require('should') // eslint-disable-line
 const HtmlParser = require('../src')
 const Node = require('../src/node')
 
 describe('API', function() {
     it('should parse html to nodes tree correctly', function() {
-        let html = fs.readFileSync(path.resolve(__dirname, 'textures/simple.html'))
-        let parser = new HtmlParser()
-        let tree = parser.parse(html.toString())
+        const html = fs.readFileSync(path.resolve(__dirname, 'textures/simple.html'))
+        const parser = new HtmlParser()
+        const tree = parser.parse(html.toString())
         tree.should.have.properties({
             tagName: 'document',
             nodeType: 9,
@@ -29,9 +29,9 @@ describe('API', function() {
         })
     })
     it('should parse complex doctype correctly', function() {
-        let html = fs.readFileSync(path.resolve(__dirname, 'textures/doctype.html'))
-        let parser = new HtmlParser()
-        let tree = parser.parse(html.toString())
+        const html = fs.readFileSync(path.resolve(__dirname, 'textures/doctype.html'))
+        const parser = new HtmlParser()
+        const tree = parser.parse(html.toString())
         tree.should.have.properties({
             tagName: 'document',
             nodeType: 9,
@@ -43,7 +43,7 @@ describe('API', function() {
             nodeType: 10,
             parentNode: tree,
             publicId: '-//W3C//DTD XHTML 1.0 Transitional//EN',
-			systemId: 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd',
+            systemId: 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd',
             name: 'html'
         })
     })
