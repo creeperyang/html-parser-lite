@@ -2,18 +2,39 @@
 
 > A light weight html parser and more.
 
-### Installation & Usage
-
 [![NPM](https://nodei.co/npm/html-parser-lite.png?compact=true)](https://nodei.co/npm/html-parser-lite/)
+
+### Usage
 
 ```js
 const fs = require('fs')
 const HtmlParser = require('html-parser-lite')
+const RawHtmlParser = HtmlParser.RawHtmlParser
 
+// HtmlParser will parse html to nodes tree，somehow like dom tree
+// so you can iterate the tree to get info like textContent, attrs...
 let parser = new HtmlParser()
-let nodeTree = parser.parse(fs.readFileSync('test/textures/simple.html').toString())
+let html = fs.readFileSync('test/textures/simple.html').toString()
+let rootNode = parser.parse(html)
 
-console.log(nodeTree)
+console.log(rootNode, rootNode.childNodes)
+
+
+// RawHtmlParser is the base of HtmlParser.
+// If you use RawHtmlParser, you must implement the scanner.
+parser = new RawHtmlParser({
+    // the for methods must be implemented yourself
+    scanner: {
+        startElement(tagName, attrs, isSelfColse, input) {
+            tagName = tagName.toLowerCase()
+            // your logic
+        },
+        endElement(tagName) {},
+        characters(text) {},
+        comment(text) {}
+    }
+})
+parser.parse(html)
 ```
 
 ### License
