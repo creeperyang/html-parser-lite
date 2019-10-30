@@ -71,6 +71,11 @@ class HtmlParser {
 
             if (treatAsChars) {
                 index = html.indexOf('<')
+
+                if (index === 0) { // First char is a < so find the next one
+                    index = html.substring(1).indexOf('<')
+                }
+
                 if (index === -1) {
                     characters = html
                     html = ''
