@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/creeperyang/html-parser-lite#readme",
   "devDependencies": {
-    "eslint": "^2.10.2",
+    "eslint": "^6.6.0",
     "mocha": "^2.5.2",
     "should": "^8.4.0"
   }
