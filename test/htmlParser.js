@@ -46,4 +46,26 @@ describe('HtmlParser', function() {
             name: 'html'
         })
     })
+    it('should handle attributes correctly', function() {
+        const html = '<img src="1.png" alt="" width="621" height=422 loaded>'
+        const tree = parser.parse(html)
+        tree.childNodes[0].attrs.should.deepEqual({
+            src: '1.png',
+            alt: '',
+            width: '621',
+            height: '422',
+            loaded: true
+        })
+        should.strictEqual(tree.childNodes[0].id, '')
+        should.strictEqual(tree.childNodes[0].className, '')
+
+        // eslint-disable-next-line quotes
+        const html2 = "<p align=center style='text-align:center;' id=''></p>"
+        const tree2 = parser.parse(html2)
+        tree2.childNodes[0].attrs.should.deepEqual({
+            align: 'center',
+            style: 'text-align:center;',
+            id: ''
+        })
+    })
 })
