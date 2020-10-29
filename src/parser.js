@@ -16,6 +16,14 @@ const mustImplementMethod = (name) => {
     throw new Error(`Must implement the method ${name || ''}`)
 }
 
+// Get correct value for attrs, specially handle empty quote(alt="")
+const getAttributeValue = (valueInSingleQuote, valueInQuote, value) => {
+    if (valueInSingleQuote != null) return valueInSingleQuote
+    if (valueInQuote != null) return valueInQuote
+    if (value != null) return value
+    return true
+}
+
 /**
  * This is a simple html parser. Will read and parse html string.
  *
@@ -47,7 +55,7 @@ class HtmlParser {
                 }
             }
             // end tag
-            else if (html.substring(0, 2) === '</') {
+            else if (html.substring(0, 2) === '</') { // eslint-disable-line brace-style
                 match = this.endTagRe.exec(html)
                 if (match) {
                     html = RegExp.rightContext
@@ -58,7 +66,7 @@ class HtmlParser {
                 }
             }
             // start tag
-            else if (html.charAt(0) === '<') {
+            else if (html.charAt(0) === '<') { // eslint-disable-line brace-style
                 match = this.startTagRe.exec(html)
                 if (match) {
                     html = RegExp.rightContext
@@ -109,7 +117,7 @@ class HtmlParser {
     parseAttributes(tagName, input) {
         const attrs = {}
         input.replace(this.attrRe, (attr, name, c2, value, c4, valueInQuote, c6, valueInSingleQuote) => {
-            attrs[name] = valueInSingleQuote || valueInQuote || value || true
+            attrs[name] = getAttributeValue(valueInSingleQuote, valueInQuote, value)
         })
         return attrs
     }
