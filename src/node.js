@@ -15,8 +15,9 @@ class Node {
         this.childNodes = childNodes || []
 
         if (nodeType === ELEMENT_NODE) {
-            if (attrs.id) this.id = attrs.id
-            if (attrs.class) this.className = attrs.class
+            // The id and className will always be string (if no value, just set to empty string)
+            this.id = typeof attrs.id === 'string' ? attrs.id : ''
+            this.className = typeof attrs.class === 'string' ? attrs.class : ''
         }
     }
     appendChild(node) {
