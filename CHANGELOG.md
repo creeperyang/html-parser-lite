@@ -1,3 +1,7 @@
+# 1.0.0
+
+- Main API change: `parse(html, options)`.
+
 # 0.2.2
 
 - Fix attrutes parse error (case: `alt=""` --> `alt='""'`);
