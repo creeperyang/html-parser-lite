@@ -1,11 +1,12 @@
 {
   "name": "html-parser-lite",
-  "version": "0.2.2",
+  "version": "1.0.0",
   "description": "A light weight html parser",
   "main": "src/index.js",
   "scripts": {
-    "lint": "./node_modules/.bin/eslint src test",
-    "test": "npm run lint && ./node_modules/.bin/mocha $(find test -name *.js ! -name _*.js)"
+    "lint": "eslint src test",
+    "test": "npm run lint && mocha test/**.js",
+    "t": "mocha test/**.js"
   },
   "repository": {
     "type": "git",
@@ -18,15 +19,15 @@
   "author": "creeperyang",
   "license": "MIT",
   "engines": {
-    "node": ">=6.0"
+    "node": ">=16.0"
   },
   "bugs": {
     "url": "https://github.com/creeperyang/html-parser-lite/issues"
   },
   "homepage": "https://github.com/creeperyang/html-parser-lite#readme",
   "devDependencies": {
-    "eslint": "^2.10.2",
-    "mocha": "^2.5.2",
-    "should": "^8.4.0"
+    "eslint": "^8.40.0",
+    "mocha": "^10.2.0",
+    "should": "^13.2.3"
   }
 }

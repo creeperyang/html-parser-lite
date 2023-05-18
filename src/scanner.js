@@ -35,6 +35,10 @@ const { DoctypeNode, DocumentNode } = Node
  * - XHTML: The slash is REQUIRED.
  */
 const doctypeRe = /^\s*<!doctype\s+(html)(\s+public(\s+('[^']+'|"[^"]+"))?(\s+('[^']+'|"[^"]+"))?)?\s*/i
+
+/**
+ * Inner node processor.
+ */
 const elementProcessor = {
     doctype(ctx, tagName, attrs, isSelfColse, input) {
         const parentNode = ctx.path[ctx.path.length - 1]
@@ -47,7 +51,8 @@ const elementProcessor = {
             publicId: parts[4] && parts[4].substring(1, parts[4].length - 1),
             systemId: parts[6] && parts[6].substring(1, parts[6].length - 1)
         })
-        parentNode.appendChild(node)
+        parentNode && parentNode.appendChild(node)
+        return node
     },
     _default(ctx, tagName, attrs, isSelfColse, input) {
         const parentNode = ctx.path[ctx.path.length - 1]
@@ -57,14 +62,16 @@ const elementProcessor = {
             attrs,
             parentNode
         })
-        parentNode.appendChild(node)
+        parentNode && parentNode.appendChild(node)
+        // If it is not self close node, push it to `ctx.path`, and
+        // it will help to handle text content.
         if (!isSelfColse) {
-            // deepin
             ctx.path.push(node)
         }
+        return node
     },
     _selfCloseTag(ctx, tagName, attrs, isSelfColse, input) {
-        elementProcessor._default(ctx, tagName, attrs, true, input)
+        return elementProcessor._default(ctx, tagName, attrs, true, input)
     }
 }
 // doctype
@@ -73,25 +80,38 @@ elementProcessor['!doctype'] = elementProcessor['doctype']
 // semicolon to prevent error js parse
 ;['area', 'base', 'link', 'br', 'hr', 'col', 'command', 'embed',
     'img', 'input', 'keygen', 'meta', 'param', 'source', 'track', 'wbr'].forEach(tag => {
-        elementProcessor[tag] = elementProcessor._selfCloseTag
-    })
+    elementProcessor[tag] = elementProcessor._selfCloseTag
+})
 
 class HtmlScanner {
-    constructor() {
-        this.reset()
+    /**
+     * Construct HtmlScanner.
+     * @param {object} options
+     * @param {boolean} options.forceWrapper Whether force to create document as root wrapper.
+     */
+    constructor(options) {
+        this.options = options || {}
     }
-    reset() {
+    setupWrapper(needWrapper) {
         this.rootNode = new DocumentNode({
             tagName: 'document',
             nodeType: DOCUMENT_NODE
         })
+        this.rootNode.isVirtualRoot = !needWrapper
         this.path = [this.rootNode]
     }
+    /**
+     * @returns {DocumentNode}
+     */
     getRootNode() {
         return this.rootNode
     }
     startElement(tagName, attrs, isSelfColse, input) {
         tagName = tagName.toLowerCase()
+        // Init wrapper firstly.
+        if (!this.rootNode) {
+            this.setupWrapper(this.options.forceWrapper)
+        }
         if (elementProcessor[tagName]) {
             return elementProcessor[tagName](this, tagName, attrs, isSelfColse, input)
         }
