@@ -1,9 +1,9 @@
 const fs = require('fs')
 const path = require('path')
 const should = require('should') // eslint-disable-line
-const HtmlParser = require('../src').RawHtmlParser
+const HtmlParser = require('../src/parser')
 
-describe('RawHtmlParser', function() {
+describe('HtmlScanner', function() {
     const html = fs.readFileSync(path.resolve(__dirname, 'textures/partial.html'))
 
     it('should drop whitespace characters with `option.ignoreWhitespaceText=true`', function() {
@@ -20,8 +20,10 @@ describe('RawHtmlParser', function() {
         })
         parser.parse(html.toString())
     })
-    it('should throw error if not implement `startElement/endElement/characters/comment` method of instance.scanner', function() {
-        const parser = new HtmlParser()
+    it('should throw error if not implement `startElement/endElement/characters/comment` method', function() {
+        const parser = new HtmlParser({
+            scanner: {}
+        })
         try {
             parser.parse(html.toString())
         } catch (err) {
