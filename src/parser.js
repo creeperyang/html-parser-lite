@@ -9,12 +9,8 @@ const endTagRe = /^<\/([^>\s]+)[^>]*>/m
 // 1. must start with <tagName
 // 2. optional attrbutes
 // 3. /> or >
-const startTagRe = /^<([^>\s\/]+)((\s+[^=>\s]+(\s*=\s*(("[^"]*")|('[^']*')|[^>\s]+))?)*)\s*\/?\s*>/m
+const startTagRe = /^<([^>\s/]+)((\s+[^=>\s]+(\s*=\s*(("[^"]*")|('[^']*')|[^>\s]+))?)*)\s*\/?\s*>/m
 const selfCloseTagRe = /\s*\/\s*>\s*$/m
-
-const mustImplementMethod = (name) => {
-    throw new Error(`Must implement the method ${name || ''}`)
-}
 
 // Get correct value for attrs, specially handle empty quote(alt="")
 const getAttributeValue = (valueInSingleQuote, valueInQuote, value) => {
@@ -25,19 +21,25 @@ const getAttributeValue = (valueInSingleQuote, valueInQuote, value) => {
 }
 
 /**
+ * @typedef {import('./scanner')} HtmlScanner
+ */
+
+/**
  * This is a simple html parser. Will read and parse html string.
  *
  * Original code by Erik Arvidsson, Mozilla Public License
  * http://erik.eae.net/simplehtmlparser/simplehtmlparser.js
  */
 class HtmlParser {
+    /**
+     * Construct html parser.
+     * @param {object} options parser options
+     * @param {boolean} [options.ignoreWhitespaceText=false] Ignore white space when process html.
+     * @param {HtmlScanner} options.scanner scanner
+     */
     constructor(options) {
-        options = options || {}
-        if (options.scanner) {
-            this.scanner = options.scanner
-            options.scanner = null
-        }
         this.options = Object.assign({}, HtmlParser.defaults, options)
+        this.scanner = this.options.scanner
     }
     parse(html) {
         let treatAsChars = false
@@ -101,7 +103,6 @@ class HtmlParser {
             match = null
         }
     }
-
     parseStartTag(input, tagName, match) {
         const isSelfColse = selfCloseTagRe.test(input)
         let attrInput = match[2]
@@ -130,19 +131,5 @@ HtmlParser.defaults = {
 HtmlParser.prototype.attrRe = attrRe
 HtmlParser.prototype.endTagRe = endTagRe
 HtmlParser.prototype.startTagRe = startTagRe
-HtmlParser.prototype.scanner = {
-    startElement() {
-        mustImplementMethod('startElement')
-    },
-    endElement() {
-        mustImplementMethod('endElement')
-    },
-    characters() {
-        mustImplementMethod('characters')
-    },
-    comment() {
-        mustImplementMethod('comment')
-    }
-}
 
 module.exports = HtmlParser

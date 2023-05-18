@@ -1,31 +1,68 @@
-// NODE_TYPE
-const ELEMENT_NODE = 1
-const TEXT_NODE = 3
-const COMMENT_NODE = 8
-const DOCUMENT_NODE = 9
-const DOCUMENT_TYPE_NODE = 10 // <!doctype html>
+'use strict'
+
+/**
+ * Enum for node types.
+ * @readonly
+ * @enum {number}
+ */
+const NODE_TYPE = {
+    /**
+     * Normal element, such as `<div>`
+     */
+    ELEMENT_NODE: 1,
+    /**
+     * text
+     */
+    TEXT_NODE: 3,
+    /**
+     * comment
+     */
+    COMMENT_NODE: 8,
+    /**
+     * document
+     */
+    DOCUMENT_NODE: 9,
+    /**
+     * Doctype node, such as `<!doctype html>`
+     */
+    DOCUMENT_TYPE_NODE: 10
+}
 
 class Node {
+    /**
+     * Construct node.
+     * @param {object} options
+     * @param {!string} options.tagName - tag name, such as "div"
+     * @param {!NODE_TYPE} options.nodeType - node type
+     * @param {?object} options.attrs - attributes
+     * @param {?string} options.textContent - text content
+     * @param {?Node} options.parentNode - parent node
+     * @param {?Node[]} options.childNodes - child nodes
+     */
     constructor({ tagName, nodeType, attrs, textContent, parentNode, childNodes }) {
         this.tagName = tagName
         this.nodeType = nodeType
-        this.textContent = textContent
-        this.parentNode = parentNode
-        this.attrs = attrs
+        this.textContent = textContent || ''
+        this.parentNode = parentNode || null
+        this.attrs = attrs || {}
+        /**
+         * @public
+         * @type {Node[]}
+         */
         this.childNodes = childNodes || []
 
-        if (nodeType === ELEMENT_NODE) {
+        if (nodeType === NODE_TYPE.ELEMENT_NODE) {
             // The id and className will always be string (if no value, just set to empty string)
             this.id = typeof attrs.id === 'string' ? attrs.id : ''
             this.className = typeof attrs.class === 'string' ? attrs.class : ''
         }
     }
     appendChild(node) {
-        if (node) {
-            // ensure correct parentNode
-            node.parentNode = this
-            this.childNodes.push(node)
+        if (!node) {
+            return
         }
+        node.parentNode = this
+        this.childNodes.push(node)
     }
     insertAfter(node, targetNode) {
         if (!targetNode) return this.appendChild(node)
@@ -47,40 +84,40 @@ class Node {
             }
         })
     }
+    removeChild(node) {
+        if (!node) {
+            throw new Error('Invalid argument.')
+        }
+        this.childNodes.some((n, i) => {
+            if (n === node) {
+                node.parentNode = null
+                this.childNodes.splice(i, 1)
+                return node
+            }
+        })
+    }
     toJSON() {
         const json = {
             tagName: this.tagName,
-            nodeType: this.nodeType
+            nodeType: this.nodeType,
+            childNodes: this.childNodes,
+            textContent: this.textContent,
+            attrs: this.attrs
         }
-        if (this.childNodes.length) json.childNodes = this.childNodes
-        if (this.textContent) json.textContent = this.textContent
-        if (this.attrs) json.attrs = this.attrs
         if (this.id) json.id = this.id
         if (this.className) json.className = this.className
         return json
     }
-    getElementsByTagName(tagName) {
-
-    }
-    getElementsByClassName(className) {
-
-    }
 }
 
 exports = module.exports = Node
-exports.NODE_TYPE = {
-    ELEMENT_NODE,
-    TEXT_NODE,
-    COMMENT_NODE,
-    DOCUMENT_NODE,
-    DOCUMENT_TYPE_NODE
-}
+exports.NODE_TYPE = NODE_TYPE
 
 class DoctypeNode extends Node {
     constructor(options) {
         super(options)
         this.id = undefined
-        this.nodeType = DOCUMENT_TYPE_NODE
+        this.nodeType = NODE_TYPE.DOCUMENT_TYPE_NODE
         this.systemId = options.systemId || ''
         this.publicId = options.publicId || ''
         this.name = options.name || 'html'
@@ -103,7 +140,7 @@ class DocumentNode extends Node {
         function iterate(nodes) {
             let result
             nodes.some(node => {
-                if (node.nodeType !== ELEMENT_NODE) return false
+                if (node.nodeType !== NODE_TYPE.ELEMENT_NODE) return false
                 if (node.id === id) return (result = node)
                 return (result = iterate(node.childNodes))
             })
