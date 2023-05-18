@@ -1,4 +1,4 @@
-## html-parser-lite [![Build Status](https://travis-ci.org/creeperyang/html-parser-lite.svg?branch=master)](https://travis-ci.org/creeperyang/html-parser-lite)
+## html-parser-lite [![Test CI](https://github.com/creeperyang/html-parser-lite/actions/workflows/node.js.yml/badge.svg)](https://github.com/creeperyang/html-parser-lite/actions/workflows/node.js.yml)
 
 > A light weight html parser and more.
 
@@ -8,34 +8,85 @@
 
 ```js
 const fs = require('fs')
-const HtmlParser = require('html-parser-lite')
-const RawHtmlParser = HtmlParser.RawHtmlParser
+const parse = require('html-parser-lite')
 
-// HtmlParser will parse html to nodes tree，somehow like dom tree
-// so you can iterate the tree to get info like textContent, attrs...
-let parser = new HtmlParser()
-let html = fs.readFileSync('test/textures/simple.html').toString()
-let rootNode = parser.parse(html)
+const html = fs.readFileSync('test/textures/simple.html').toString()
 
-console.log(rootNode, rootNode.childNodes)
-
-
-// RawHtmlParser is the base of HtmlParser.
-// If you use RawHtmlParser, you must implement the scanner.
-parser = new RawHtmlParser({
-    // the for methods must be implemented yourself
-    scanner: {
-        startElement(tagName, attrs, isSelfColse, input) {
-            tagName = tagName.toLowerCase()
-            // your logic
-        },
-        endElement(tagName) {},
-        characters(text) {},
-        comment(text) {}
+// html-parser will parse html to nodes array (default behavior).
+const nodes = parse(html) // The same as `parse(html, { forceWrapper: false })`
+/**
+    [
+    DoctypeNode {
+        tagName: 'doctype',
+        nodeType: 10,
+        textContent: '',
+        parentNode: null,
+        attrs: {},
+        childNodes: [],
+        id: undefined,
+        systemId: '',
+        publicId: '',
+        name: 'html'
+    },
+    Node {
+        tagName: 'html',
+        nodeType: 1,
+        textContent: '',
+        parentNode: null,
+        attrs: { class: 'html-ok', lang: 'zh-hans-cn' },
+        childNodes: [ [Node], [Node] ],
+        id: '',
+        className: 'html-ok'
     }
-})
-parser.parse(html)
+    ]
+*/
+console.log(nodes)
+
+// Or you can make it somehow like dom tree:
+const dom = parse(html, { forceWrapper: true })
+console.log(dom)
+/**
+    DocumentNode {
+    tagName: 'document',
+    nodeType: 9,
+    textContent: '',
+    parentNode: null,
+    attrs: {},
+    childNodes: [
+        DoctypeNode {
+        tagName: 'doctype',
+        nodeType: 10,
+        textContent: '',
+        parentNode: [Circular *1],
+        attrs: {},
+        childNodes: [],
+        id: undefined,
+        systemId: '',
+        publicId: '',
+        name: 'html'
+        },
+        Node {
+        tagName: 'html',
+        nodeType: 1,
+        textContent: '',
+        parentNode: [Circular *1],
+        attrs: [Object],
+        childNodes: [Array],
+        id: '',
+        className: 'html-ok'
+        }
+    ],
+    isVirtualRoot: false
+    }
+*/
 ```
+
+### API
+
+**`parse(html: string, options?: {forceWrapper:boolean})`:**
+
+- If `forceWrapper=true`, returns `DocumentNode` (subclass of internal `Node` class);
+- If `forceWrapper=false`, returns `Node[]`.
 
 ### License
 
