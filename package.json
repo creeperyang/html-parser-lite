@@ -1,12 +1,11 @@
 {
   "name": "html-parser-lite",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A light weight html parser",
   "main": "src/index.js",
   "scripts": {
     "lint": "eslint src test",
-    "test": "npm run lint && mocha test/**.js",
-    "t": "mocha test/**.js"
+    "test": "npm run lint && mocha test/**.js"
   },
   "repository": {
     "type": "git",

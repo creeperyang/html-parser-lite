@@ -1,0 +1,70 @@
+{
+    "tagName": "document",
+    "nodeType": 9,
+    "childNodes": [
+        {
+            "tagName": "doctype",
+            "nodeType": 10,
+            "publicId": "",
+            "systemId": "",
+            "name": "html"
+        },
+        {
+            "tagName": "html",
+            "nodeType": 1,
+            "childNodes": [
+                {
+                    "tagName": "head",
+                    "nodeType": 1,
+                    "childNodes": [
+                        {
+                            "tagName": "meta",
+                            "nodeType": 1,
+                            "childNodes": [],
+                            "attrs": {
+                                "charset": "utf-8"
+                            }
+                        },
+                        {
+                            "tagName": "title",
+                            "nodeType": 1,
+                            "childNodes": [
+                                {
+                                    "tagName": "text",
+                                    "nodeType": 3,
+                                    "textContent": "hi"
+                                }
+                            ],
+                            "attrs": {}
+                        }
+                    ],
+                    "attrs": {}
+                },
+                {
+                    "tagName": "body",
+                    "nodeType": 1,
+                    "childNodes": [
+                        {
+                            "tagName": "h1",
+                            "nodeType": 1,
+                            "childNodes": [
+                                {
+                                    "tagName": "text",
+                                    "nodeType": 3,
+                                    "textContent": "heading title"
+                                }
+                            ],
+                            "attrs": {}
+                        }
+                    ],
+                    "attrs": {}
+                }
+            ],
+            "attrs": {
+                "class": "html-ok",
+                "lang": "zh-hans-cn"
+            },
+            "className": "html-ok"
+        }
+    ]
+}

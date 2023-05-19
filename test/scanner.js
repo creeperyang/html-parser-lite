@@ -3,7 +3,7 @@ const path = require('path')
 const should = require('should') // eslint-disable-line
 const HtmlParser = require('../src/parser')
 
-describe('HtmlScanner', function() {
+describe('Parser', function() {
     const html = fs.readFileSync(path.resolve(__dirname, 'textures/partial.html'))
 
     it('should drop whitespace characters with `option.ignoreWhitespaceText=true`', function() {
@@ -56,7 +56,8 @@ describe('HtmlScanner', function() {
                 comment(text) {
                     commentQueue.push(text)
                 }
-            }
+            },
+            ignoreWhitespaceText: false
         })
         parser.parse(html.toString())
         startElementQueue.should.deepEqual(expected.startElementQueue)
