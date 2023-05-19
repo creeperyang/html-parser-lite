@@ -1,6 +1,7 @@
-# 1.0.0
+# 1.1.0
 
 - Main API change: `parse(html, options)`.
+- Adjust white space process logic.
 
 # 0.2.2
 
