@@ -34,11 +34,11 @@ class HtmlParser {
     /**
      * Construct html parser.
      * @param {object} options parser options
-     * @param {boolean} [options.ignoreWhitespaceText=false] Ignore white space when process html.
+     * @param {boolean} [options.ignoreWhitespaceText=true] Don't create text node when all the text are white spaces.
      * @param {HtmlScanner} options.scanner scanner
      */
     constructor(options) {
-        this.options = Object.assign({}, HtmlParser.defaults, options)
+        this.options = Object.assign({ ignoreWhitespaceText: true }, options)
         this.scanner = this.options.scanner
     }
     parse(html) {
@@ -93,8 +93,7 @@ class HtmlParser {
                     characters = html.substring(0, index)
                     html = html.substring(index)
                 }
-
-                if (!this.options.ignoreWhitespaceText || !/^\s*$/.test(characters)) {
+                if (!this.options.ignoreWhitespaceText || !/^[\s\n\r]*$/.test(characters)) {
                     this.scanner.characters(characters)
                 }
             }
@@ -122,10 +121,6 @@ class HtmlParser {
         })
         return attrs
     }
-}
-
-HtmlParser.defaults = {
-    ignoreWhitespaceText: false
 }
 
 HtmlParser.prototype.attrRe = attrRe

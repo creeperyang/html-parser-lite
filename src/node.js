@@ -34,27 +34,34 @@ class Node {
      * @param {object} options
      * @param {!string} options.tagName - tag name, such as "div"
      * @param {!NODE_TYPE} options.nodeType - node type
-     * @param {?object} options.attrs - attributes
-     * @param {?string} options.textContent - text content
-     * @param {?Node} options.parentNode - parent node
+     * @param {?object} [options.attrs={}] - attributes
+     * @param {?string} [options.textContent=''] - text content
+     * @param {?Node} [options.parentNode=null] - parent node
      * @param {?Node[]} options.childNodes - child nodes
      */
-    constructor({ tagName, nodeType, attrs, textContent, parentNode, childNodes }) {
+    constructor({ tagName, nodeType, attrs = {}, textContent = '', parentNode = null, childNodes = [] }) {
         this.tagName = tagName
         this.nodeType = nodeType
-        this.textContent = textContent || ''
-        this.parentNode = parentNode || null
-        this.attrs = attrs || {}
+        this.parentNode = parentNode
         /**
          * @public
          * @type {Node[]}
          */
-        this.childNodes = childNodes || []
+        this.childNodes = childNodes
 
         if (nodeType === NODE_TYPE.ELEMENT_NODE) {
             // The id and className will always be string (if no value, just set to empty string)
             this.id = typeof attrs.id === 'string' ? attrs.id : ''
             this.className = typeof attrs.class === 'string' ? attrs.class : ''
+        }
+        // Only doctype/element node has attrs
+        if (nodeType === NODE_TYPE.ELEMENT_NODE || nodeType === NODE_TYPE.DOCUMENT_TYPE_NODE) {
+            this.attrs = attrs
+        }
+        // Only text/comment node has textContent
+        if (nodeType === NODE_TYPE.TEXT_NODE || nodeType === NODE_TYPE.COMMENT_NODE) {
+            this.textContent = textContent
+            this.childNodes = undefined
         }
     }
     appendChild(node) {
@@ -100,11 +107,11 @@ class Node {
         const json = {
             tagName: this.tagName,
             nodeType: this.nodeType,
-            childNodes: this.childNodes,
-            textContent: this.textContent,
-            attrs: this.attrs
+            childNodes: this.childNodes
         }
+        if (typeof this.textContent === 'string') json.textContent = this.textContent
         if (this.id) json.id = this.id
+        if (this.attrs) json.attrs = this.attrs
         if (this.className) json.className = this.className
         return json
     }
@@ -145,6 +152,13 @@ class DocumentNode extends Node {
                 return (result = iterate(node.childNodes))
             })
             return result
+        }
+    }
+    toJSON() {
+        return {
+            tagName: this.tagName,
+            nodeType: this.nodeType,
+            childNodes: this.childNodes
         }
     }
 }

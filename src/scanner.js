@@ -87,7 +87,7 @@ class HtmlScanner {
     /**
      * Construct HtmlScanner.
      * @param {object} options
-     * @param {boolean} options.forceWrapper Whether force to create document as root wrapper.
+     * @param {boolean} options.wrapWithDocument Whether force to create document as root wrapper.
      */
     constructor(options) {
         this.options = options || {}
@@ -110,7 +110,7 @@ class HtmlScanner {
         tagName = tagName.toLowerCase()
         // Init wrapper firstly.
         if (!this.rootNode) {
-            this.setupWrapper(this.options.forceWrapper)
+            this.setupWrapper(this.options.wrapWithDocument)
         }
         if (elementProcessor[tagName]) {
             return elementProcessor[tagName](this, tagName, attrs, isSelfColse, input)
@@ -121,8 +121,8 @@ class HtmlScanner {
         this.path.pop()
     }
     characters(text) {
-        // drop empty text node
-        if (/^\s*$/.test(text)) return
+        // Drop empty node.
+        if (!text) return
         const currentNode = this.path[this.path.length - 1]
         const node = new Node({
             tagName: 'text',
